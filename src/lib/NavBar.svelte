@@ -1,0 +1,178 @@
+<script>
+	import { page } from '$app/stores';
+	import ethereum from '../assets/eth-logo.png';
+	import polygon from '../assets/polygon-logo.png';
+	import { notifications } from '../stores/notifications';
+	import { connected, chainId, account } from '../stores/provider';
+	import { getAccount } from '../utils';
+
+	let open = 'hidden';
+	let isOpen = false;
+
+	let selectedTab = 'text-black';
+	let defaultTab = 'text-gray-600 hover:bg-gray-200 hover:text-gray-900';
+
+	const copyToClipboard = () => {
+		navigator.clipboard.writeText($account);
+		notifications.info('Copied!', 5000);
+	};
+
+	const collapse = () => {
+		isOpen = !isOpen;
+		if (isOpen) open = '';
+		else open = 'hidden';
+	};
+</script>
+
+{#if $connected}
+	<nav class="bg-white">
+		<div class="px-2 sm:px-6 lg:px-8">
+			<div class="relative flex items-center justify-between h-16 border-b-2">
+				<div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+					<!-- Mobile menu button-->
+					<button
+						type="button"
+						on:click={collapse}
+						class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+						aria-controls="mobile-menu"
+						aria-expanded="false"
+					>
+						<span class="sr-only">Open main menu</span>
+
+						{#if isOpen}
+							<svg
+								class="h-6 w-6"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="2"
+								stroke="currentColor"
+								aria-hidden="true"
+							>
+								<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+							</svg>
+						{:else}
+							<svg
+								class="h-6 w-6"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="2"
+								stroke="currentColor"
+								aria-hidden="true"
+							>
+								<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+							</svg>
+						{/if}
+					</button>
+				</div>
+				<div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+					<a class="flex-shrink-0 flex items-center" href="/">
+						<img
+							title="Serpent"
+							class="block lg:hidden h-8 w-auto filter-purple"
+							src="https://www.svgrepo.com/show/66547/snake.svg"
+							alt="Serpent"
+						/>
+						<div class="flex flex-row hidden lg:flex">
+							<img
+								title="Serpent"
+								class="h-8 basis-1/4 filter-purple"
+								src="https://www.svgrepo.com/show/66547/snake.svg"
+								alt="Serpent"
+							/>
+							<img
+								class="h-8 basis-3/4 mt-1 pl-1 filter-black"
+								src="data:image/svg+xml,%3Csvg width='375' height='90' viewBox='0 -3 375 90' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='svgGroup' stroke-linecap='round' fill-rule='evenodd' font-size='9pt' stroke='%23000' stroke-width='0.25mm' fill='%23000' style='stroke:%23000;stroke-width:0.25mm;fill:%23000'%3E%3Cpath d='M 107.6 44.4 L 60.8 44.4 L 60.8 42.5 L 106.5 42.5 L 105.7 44 A 27.423 27.423 0 0 0 104.782 36.793 A 23.548 23.548 0 0 0 102.8 31.8 Q 99.9 26.4 94.95 23.3 A 20.41 20.41 0 0 0 85.565 20.276 A 25.111 25.111 0 0 0 83.6 20.2 A 21.913 21.913 0 0 0 76.062 21.472 A 20.229 20.229 0 0 0 72.3 23.3 Q 67.3 26.4 64.45 31.8 Q 61.6 37.2 61.6 44 L 61.6 44.4 A 27.744 27.744 0 0 0 62.475 51.492 A 23.211 23.211 0 0 0 64.7 57 Q 67.8 62.5 73.2 65.6 A 23.473 23.473 0 0 0 82.914 68.586 A 28.934 28.934 0 0 0 85.5 68.7 Q 90.7 68.7 95.35 66.7 Q 100 64.7 103.1 60.7 L 104.5 62.1 Q 101.1 66.3 96.1 68.45 Q 91.1 70.6 85.5 70.6 A 28.652 28.652 0 0 1 78.011 69.655 A 24.131 24.131 0 0 1 72.2 67.25 Q 66.4 63.9 63.05 57.95 A 26.117 26.117 0 0 1 59.86 47.646 A 32.219 32.219 0 0 1 59.7 44.4 A 32.431 32.431 0 0 1 60.463 37.216 A 25.63 25.63 0 0 1 62.8 30.85 Q 65.9 25 71.35 21.65 Q 76.8 18.3 83.6 18.3 A 24.412 24.412 0 0 1 91.944 19.7 A 22.543 22.543 0 0 1 95.85 21.55 Q 101.3 24.8 104.45 30.6 A 25.921 25.921 0 0 1 107.351 39.816 A 32.613 32.613 0 0 1 107.6 43.9 L 107.6 44.1 L 107.6 44.4 Z M 270.7 44.4 L 223.9 44.4 L 223.9 42.5 L 269.6 42.5 L 268.8 44 A 27.423 27.423 0 0 0 267.882 36.793 A 23.548 23.548 0 0 0 265.9 31.8 Q 263 26.4 258.05 23.3 A 20.41 20.41 0 0 0 248.665 20.276 A 25.111 25.111 0 0 0 246.7 20.2 A 21.913 21.913 0 0 0 239.162 21.472 A 20.229 20.229 0 0 0 235.4 23.3 Q 230.4 26.4 227.55 31.8 Q 224.7 37.2 224.7 44 L 224.7 44.4 A 27.744 27.744 0 0 0 225.575 51.492 A 23.211 23.211 0 0 0 227.8 57 Q 230.9 62.5 236.3 65.6 A 23.473 23.473 0 0 0 246.014 68.586 A 28.934 28.934 0 0 0 248.6 68.7 Q 253.8 68.7 258.45 66.7 Q 263.1 64.7 266.2 60.7 L 267.6 62.1 Q 264.2 66.3 259.2 68.45 Q 254.2 70.6 248.6 70.6 A 28.652 28.652 0 0 1 241.111 69.655 A 24.131 24.131 0 0 1 235.3 67.25 Q 229.5 63.9 226.15 57.95 A 26.117 26.117 0 0 1 222.96 47.646 A 32.219 32.219 0 0 1 222.8 44.4 A 32.431 32.431 0 0 1 223.563 37.216 A 25.63 25.63 0 0 1 225.9 30.85 Q 229 25 234.45 21.65 Q 239.9 18.3 246.7 18.3 A 24.412 24.412 0 0 1 255.044 19.7 A 22.543 22.543 0 0 1 258.95 21.55 Q 264.4 24.8 267.55 30.6 A 25.921 25.921 0 0 1 270.451 39.816 A 32.613 32.613 0 0 1 270.7 43.9 L 270.7 44.1 L 270.7 44.4 Z M 0 60.7 L 1.4 59.4 A 20.285 20.285 0 0 0 5.142 62.793 Q 7.63 64.566 10.95 66 A 33.418 33.418 0 0 0 23.14 68.676 A 38.701 38.701 0 0 0 24.5 68.7 A 45.533 45.533 0 0 0 29.4 68.452 Q 31.925 68.178 34.054 67.602 A 21.262 21.262 0 0 0 36.95 66.6 A 19.886 19.886 0 0 0 40.478 64.654 Q 42.684 63.108 44.062 61.081 A 12.579 12.579 0 0 0 44.15 60.95 Q 46.5 57.4 46.5 53.1 A 16.993 16.993 0 0 0 46.19 49.758 Q 45.638 47.004 44.1 45.05 A 15.492 15.492 0 0 0 39.6 41.206 A 19.259 19.259 0 0 0 37.7 40.25 A 50.983 50.983 0 0 0 31.588 38.044 A 59.667 59.667 0 0 0 29 37.35 Q 24.3 36.2 19.55 35 Q 14.8 33.8 10.8 31.85 A 17.095 17.095 0 0 1 6.056 28.483 A 15.872 15.872 0 0 1 4.4 26.5 A 12.352 12.352 0 0 1 2.563 22.435 Q 2.123 20.739 2.027 18.742 A 23.73 23.73 0 0 1 2 17.6 Q 2 13 4.45 9 Q 6.9 5 12.05 2.5 A 22.229 22.229 0 0 1 16.738 0.881 Q 19.107 0.331 21.895 0.124 A 47.459 47.459 0 0 1 25.4 0 Q 31 0 36.45 1.75 Q 41.9 3.5 45.7 6.4 L 44.6 8 Q 40.4 4.9 35.3 3.4 Q 30.2 1.9 25.5 1.9 A 40.874 40.874 0 0 0 20.401 2.199 Q 17.844 2.521 15.69 3.19 A 20.392 20.392 0 0 0 13.4 4.05 Q 8.734 6.14 6.43 9.554 A 12.541 12.541 0 0 0 6.3 9.75 Q 4 13.3 4 17.7 A 17.585 17.585 0 0 0 4.303 21.067 Q 4.69 23.048 5.569 24.608 A 9.743 9.743 0 0 0 6.4 25.85 Q 8.8 28.9 12.8 30.65 A 50.078 50.078 0 0 0 18.654 32.773 A 59.466 59.466 0 0 0 21.55 33.55 Q 26.3 34.7 31 35.95 A 49.527 49.527 0 0 1 37.656 38.219 A 43.526 43.526 0 0 1 39.7 39.15 A 17.832 17.832 0 0 1 44.075 42.115 A 15.875 15.875 0 0 1 46.1 44.4 A 11.809 11.809 0 0 1 47.937 48.362 Q 48.359 49.954 48.465 51.823 A 22.651 22.651 0 0 1 48.5 53.1 Q 48.5 57.7 46 61.7 A 15.349 15.349 0 0 1 42.077 65.88 Q 40.377 67.143 38.208 68.146 A 27.941 27.941 0 0 1 38.2 68.15 Q 32.9 70.6 24.6 70.6 Q 17 70.6 10.25 67.8 A 33.754 33.754 0 0 1 5.645 65.489 Q 2.188 63.388 0 60.7 Z M 332 39.8 L 332 70.3 L 330 70.3 L 330 39.8 A 30.141 30.141 0 0 0 329.521 34.249 Q 328.929 31.093 327.604 28.624 A 14.984 14.984 0 0 0 325.1 25.2 A 16.061 16.061 0 0 0 317.279 20.86 Q 314.597 20.2 311.4 20.2 A 28.251 28.251 0 0 0 305.814 20.726 A 20.8 20.8 0 0 0 299.7 22.95 Q 294.8 25.7 292.2 30.65 Q 289.6 35.6 289.6 42.2 L 289.6 70.3 L 287.6 70.3 L 287.6 18.6 L 289.6 18.6 L 289.6 33.3 L 289.4 33 Q 291.7 26.2 297.3 22.25 A 21.002 21.002 0 0 1 305.165 18.903 A 29.671 29.671 0 0 1 311.3 18.3 A 28.007 28.007 0 0 1 316.555 18.769 A 20.204 20.204 0 0 1 322.3 20.75 Q 326.9 23.2 329.45 28 Q 331.761 32.35 331.978 38.507 A 36.775 36.775 0 0 1 332 39.8 Z M 355.2 57.9 L 355.2 7.3 L 357.2 7.3 L 357.2 57.4 A 17.995 17.995 0 0 0 357.464 60.584 Q 358.044 63.806 359.9 65.8 A 8.634 8.634 0 0 0 363.922 68.203 Q 365.324 68.607 367.008 68.683 A 17.637 17.637 0 0 0 367.8 68.7 A 13.851 13.851 0 0 0 371.988 68.093 A 11.341 11.341 0 0 0 376.4 65.5 L 377.8 66.9 Q 376 68.8 373.25 69.7 Q 370.5 70.6 367.7 70.6 A 16.955 16.955 0 0 1 364.009 70.223 Q 361.604 69.687 359.832 68.386 A 9.755 9.755 0 0 1 358.4 67.1 A 11.945 11.945 0 0 1 355.513 61.248 A 17.099 17.099 0 0 1 355.2 57.9 Z M 178.998 69.419 A 25.759 25.759 0 0 0 186.9 70.6 A 29.293 29.293 0 0 0 188.219 70.571 A 24.474 24.474 0 0 0 199.7 67.25 Q 205.4 63.9 208.7 58 A 25.024 25.024 0 0 0 211.069 52.095 A 29.895 29.895 0 0 0 212 44.5 A 32.721 32.721 0 0 0 211.739 40.311 A 25.86 25.86 0 0 0 208.7 30.9 Q 205.4 25 199.7 21.65 A 23.751 23.751 0 0 0 195.568 19.726 A 25.839 25.839 0 0 0 186.9 18.3 A 28.93 28.93 0 0 0 185.094 18.356 A 23.785 23.785 0 0 0 174.2 21.65 Q 168.6 25 165.35 30.9 A 25.211 25.211 0 0 0 162.964 37.038 A 30.985 30.985 0 0 0 162.1 44.5 A 32.815 32.815 0 0 0 162.303 48.194 A 26.223 26.223 0 0 0 165.35 58 Q 168.6 63.9 174.2 67.25 A 22.957 22.957 0 0 0 178.998 69.419 Z M 126.5 70.3 L 124.5 70.3 L 124.5 18.6 L 126.5 18.6 L 126.5 32.9 L 126.3 32.6 Q 128.4 25.8 133.65 22.05 A 19.6 19.6 0 0 1 141.14 18.85 A 27.713 27.713 0 0 1 146.8 18.3 L 146.8 20.3 L 146.55 20.3 L 146.2 20.3 Q 136.9 20.3 131.7 26.25 A 20.011 20.011 0 0 0 127.495 34.32 Q 126.5 37.994 126.5 42.5 L 126.5 70.3 Z M 186.9 68.7 Q 193.5 68.7 198.75 65.65 Q 204 62.6 207 57.1 A 24.563 24.563 0 0 0 209.788 48.159 A 30.854 30.854 0 0 0 210 44.5 A 29.262 29.262 0 0 0 209.256 37.762 A 23.294 23.294 0 0 0 207 31.85 Q 204 26.4 198.75 23.3 A 22.454 22.454 0 0 0 188.529 20.248 A 27.08 27.08 0 0 0 186.9 20.2 A 24.073 24.073 0 0 0 179.222 21.396 A 21.729 21.729 0 0 0 175.05 23.3 Q 169.8 26.4 166.8 31.85 A 24.054 24.054 0 0 0 164.093 40.171 A 31.01 31.01 0 0 0 163.8 44.5 A 28.62 28.62 0 0 0 164.647 51.592 A 23.66 23.66 0 0 0 166.8 57.1 Q 169.8 62.6 175.05 65.65 A 22.711 22.711 0 0 0 185.221 68.649 A 27.492 27.492 0 0 0 186.9 68.7 Z M 163.8 89.7 L 161.8 89.7 L 161.8 18.6 L 163.8 18.6 L 163.8 37.6 L 162.8 44.6 L 163.8 51.6 L 163.8 89.7 Z M 374.7 20.5 L 345.2 20.5 L 345.2 18.6 L 374.7 18.6 L 374.7 20.5 Z' vector-effect='non-scaling-stroke'/%3E%3C/g%3E%3C/svg%3E"
+								alt="Serpent"
+							/>
+						</div>
+					</a>
+					<div class="hidden sm:block sm:ml-20">
+						<div class="flex space-x-4">
+							<a
+								href="/play"
+								class="block px-3 py-2 rounded-md text-base font-medium  {$page.url.pathname ===
+								'/play'
+									? selectedTab
+									: defaultTab}">Play</a
+							>
+
+							<a
+								href="/market"
+								class="block px-3 py-2 rounded-md text-base font-medium {$page.url.pathname ===
+								'/market'
+									? selectedTab
+									: defaultTab}">Market</a
+							>
+
+							<a
+								href="/mint"
+								class="block px-3 py-2 rounded-md text-base font-medium {$page.url.pathname ===
+								'/mint'
+									? selectedTab
+									: defaultTab}">Mint</a
+							>
+						</div>
+					</div>
+				</div>
+				<div
+					class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
+				>
+					{#if $chainId == 4}
+						<img
+							class="h-9 rounded-full"
+							src={ethereum}
+							alt="ethereum logo"
+							title="Rinkeby testnet"
+						/>
+					{:else if $chainId == 80001}
+						<img class="h-9 rounded-full" src={polygon} alt="polygon logo" title="Mumbai testnet" />
+					{:else if $chainId == 1337}
+						<div
+							class="h-9 w-9 pt-1 text-center rounded-full text-white bg-black"
+							title="Localhost"
+						>
+							<span>L</span>
+						</div>
+					{/if}
+
+					<div class="ml-3 relative cursor-pointer">
+						<button class="text-black" on:click={copyToClipboard}>
+							<p>{getAccount($account)}</p>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Mobile menu -->
+		<div class="sm:hidden {open}" id="mobile-menu">
+			<div class="px-2 pt-2 pb-3 space-y-1">
+				<a
+					href="/play"
+					on:click={collapse}
+					class="block px-3 py-2 rounded-md text-base font-medium  {$page.url.pathname === '/play'
+						? selectedTab
+						: defaultTab}">Play</a
+				>
+
+				<a
+					href="/market"
+					on:click={collapse}
+					class="block px-3 py-2 rounded-md text-base font-medium {$page.url.pathname === '/market'
+						? selectedTab
+						: defaultTab}">Market</a
+				>
+
+				<a
+					href="/mint"
+					on:click={collapse}
+					class="block px-3 py-2 rounded-md text-base font-medium {$page.url.pathname === '/mint'
+						? selectedTab
+						: defaultTab}">Mint</a
+				>
+			</div>
+		</div>
+	</nav>
+{/if}
